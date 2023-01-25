@@ -2,9 +2,6 @@
 #include "task.h"
 #include "DelayedTask.h"
 
-
-
-
 struct simpleTask : public task
 {
 	int Priority;

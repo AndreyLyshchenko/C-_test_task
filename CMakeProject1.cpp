@@ -2,21 +2,13 @@
 //
 
 #include "CMakeProject1.h"
-#include <string>
-#include <chrono>
-#include <thread>
 #include "task.h"
 #include "DelayedTask.h"
 #include "SimpleTask.h"
-#include <queue>
-#include <thread>
-#include <mutex>
 #include "CustomLess.h"
-#include <memory>
 
 typedef std::vector<std::pair<std::string, std::queue<std::unique_ptr <delayedTask>>>*> queueContainer;
 
-extern std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>, customLess>* queueS1;
 std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>, customLess>* queueS1;
 
 queueContainer* queues;

@@ -15,8 +15,8 @@ void delayedTask::generateTask()
 	std::string newQueueName = "queueS1";
 	int newDelay = 2;
 
-	int priority;	// TODO: revork
-	if ((char)Name.back() == 2)
+	int priority;	
+	if ((char)Name.back() == '2')
 	{
 		priority = 2;
 	}
