@@ -3,6 +3,8 @@
 #include "SimpleTask.h"
 #include "CustomLess.h"
 
+std::mutex queueS1Locker;
+
 typedef std::vector<std::pair<std::string, std::queue<std::unique_ptr <delayedTask>>>*> queueContainer;
 
 std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>, customLess>* queueS1;
@@ -60,12 +62,16 @@ int main()
 	{
 		if (!queueS1->empty())
 		{
+			queueS1Locker.lock();	
+
 			auto& temp = queueS1->top();
 			auto tempPtr = temp.get();
 			tempPtr->indicateCreation();
 			tempPtr->sleep();
 			tempPtr->generateTask();
 			queueS1->pop();
+
+			queueS1Locker.unlock();
 		}
 	}
 

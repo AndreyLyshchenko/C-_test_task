@@ -1,7 +1,7 @@
 #include "DelayedTask.h"
 #include "CustomLess.h"
 extern std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>, customLess>* queueS1;
-std::mutex queueS1Locker;
+extern std::mutex queueS1Locker;
 
 delayedTask::delayedTask(std::string name, std::string queue, int delay)
 	: task(name, queue, delay)
