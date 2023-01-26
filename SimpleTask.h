@@ -4,10 +4,10 @@
 
 struct simpleTask : public task
 {
-	int Priority;
-	simpleTask(std::string name, std::string queue, int delay, int priority);
+	simpleTask(std::string name, std::string queue, int delayedTaskDelay, int simpleTaskDelay,int simpleTaskPriority);
 	void indicateCreation() override;
 	void generateTask() override;
+	void getSleepTime() override;
+	void sleep() override;
 	void indicateCompletion();
-	simpleTask& operator = (const simpleTask& task);
 };

@@ -7,17 +7,17 @@ std::mutex queueS1Locker;
 
 typedef std::vector<std::pair<std::string, std::queue<std::unique_ptr <delayedTask>>>*> queueContainer;
 
-std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>, customLess>* queueS1;
+std::priority_queue < std::shared_ptr <simpleTask>, std::deque<std::shared_ptr <simpleTask>>, customLess>* queueS1;
 
 queueContainer* queues;
 
-void generateDelayedTask(std::string taskName, std::string queueName, int delay, queueContainer &container)
+void generateDelayedTask(std::string taskName, std::string queueName, int delayedTaskDelay, int simpleTaskDelay, int simpleTaskPriority, queueContainer &container)
 {
 	for (auto& element : container)
 	{
 		if (element->first == queueName)
 		{
-			element->second.push(std::make_unique<delayedTask>(taskName, queueName, delay)); // new Delayed task is created
+			element->second.push(std::make_unique<delayedTask>(taskName, queueName, delayedTaskDelay, simpleTaskDelay, simpleTaskPriority)); // new Delayed task is created
 			while (true) // infinite loop
 			{
 				if (!element->second.empty())
@@ -51,12 +51,12 @@ int main()
 	queues->push_back(delayQueue2);
 	queues->push_back(delayQueue3);
 
-	queueS1 = new std::priority_queue < std::unique_ptr <simpleTask>, std::deque<std::unique_ptr <simpleTask>>,customLess>;
+	queueS1 = new std::priority_queue < std::shared_ptr <simpleTask>, std::deque<std::shared_ptr <simpleTask>>,customLess>;
 
 	
-	std::thread threadForQueueD1(generateDelayedTask, "taskD1", "queueD1", 10, std::ref(*queues));
-	std::thread threadForQueueD2(generateDelayedTask, "taskD2", "queueD2", 10, std::ref(*queues));
-	std::thread threadForQueueD3(generateDelayedTask, "taskD3", "queueD3", 10, std::ref(*queues));
+	std::thread threadForQueueD1(generateDelayedTask, "taskD1", "queueD1", 10, 2, 1, std::ref(*queues));
+	std::thread threadForQueueD2(generateDelayedTask, "taskD2", "queueD2", 10, 2, 2, std::ref(*queues));
+	std::thread threadForQueueD3(generateDelayedTask, "taskD3", "queueD3", 10, 2, 1, std::ref(*queues));
 
 	while (true) // infinite loop
 	{
@@ -64,14 +64,14 @@ int main()
 		{
 			queueS1Locker.lock();	
 
-			auto& temp = queueS1->top();
-			auto tempPtr = temp.get();
-			tempPtr->indicateCreation();
-			tempPtr->sleep();
-			tempPtr->generateTask();
+			auto temp = queueS1->top();
 			queueS1->pop();
 
 			queueS1Locker.unlock();
+
+			temp->indicateCreation();
+			temp->sleep();
+			temp->generateTask();
 		}
 	}
 
