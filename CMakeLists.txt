@@ -6,6 +6,6 @@ project(test)
 
 find_package(Threads)
 
-add_executable(test Main.cpp DelayedTask.cpp SimpleTask.cpp task.cpp CustomLess.cpp)
+add_executable(test Main.cpp task.cpp Queue.cpp)
 
 target_link_libraries(test Threads::Threads)
